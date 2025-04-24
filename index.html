@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>56x56x10 黑盒子 - 交互式绘图演示</title>
+    <title>56x56x10凸块划线 - 交互式绘图演示</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { 
@@ -37,13 +37,13 @@
             padding: 0 10px;
         }
         #buttonContainer button {
-            padding: 12px 20px;
-            font-size: 16px;
+            padding: 8px 10px;
+            font-size: 12px;
             border: 1px solid #666;
             background: rgba(255,255,255,0.9);
             cursor: pointer;
             border-radius: 4px;
-            min-width: 60px;
+            min-width: 40px;
             flex-shrink: 0;
             transition: opacity 0.3s; /* 添加过渡效果 */
         }
@@ -80,7 +80,7 @@
     </style>
 </head>
 <body>
-    <div id="info">56x56x10 黑盒子 - 当前模式：预设绘图</div>
+    <div id="info">制作：高州一职Mr黎 当前模式：预设绘图</div>
     <button id="modeToggle">进入自由绘制模式</button>
     <button id="rotateCW">转90度</button>
     <div id="buttonContainer">
@@ -169,7 +169,7 @@
                     isDrawingMode = true;
                     modeToggle.textContent = "重新开始";
                     rotateCWBtn.style.display = 'block';
-                    document.getElementById('info').textContent = "56x56x10 黑盒子 - 当前模式：自由绘制";
+                    document.getElementById('info').textContent = "制作：高州一职Mr黎 当前模式：自由绘制";
                     controls.enabled = false;
                     
                     // 添加透明效果
@@ -380,5 +380,6 @@
         setupEventListeners();
         animate();
     </script>
+
 </body>
 </html>
