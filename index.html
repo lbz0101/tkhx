@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>56x56x10 黑盒子 - 交互式绘图演示</title>
+    <title>56x56x10 凸块划线- 交互式绘图演示</title>
     <style>
         body { margin: 0; overflow: hidden; }
         canvas { 
@@ -45,6 +45,10 @@
             border-radius: 4px;
             min-width: 60px;
             flex-shrink: 0;
+            transition: opacity 0.3s; /* 添加过渡效果 */
+        }
+        #buttonContainer button.transparent-button {
+            opacity: 0; /* 透明效果 */
         }
         #modeToggle {
             position: fixed;
@@ -92,7 +96,6 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
     <script>
-        // 初始化核心组件
         let isDrawingMode = false;
         let currentLine = null;
         const raycaster = new THREE.Raycaster();
@@ -111,7 +114,6 @@
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         let cuboid;
 
-        // 初始化场景
         function initScene() {
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -150,10 +152,10 @@
             camera.lookAt(cuboid.position);
         }
 
-        // 模式切换功能
         function setupModeToggle() {
             const modeToggle = document.getElementById('modeToggle');
             const rotateCWBtn = document.getElementById('rotateCW');
+            const buttons = document.querySelectorAll('#buttonContainer button');
 
             modeToggle.addEventListener('click', () => {
                 if(!isDrawingMode) {
@@ -169,13 +171,15 @@
                     rotateCWBtn.style.display = 'block';
                     document.getElementById('info').textContent = "56x56x10 黑盒子 - 当前模式：自由绘制";
                     controls.enabled = false;
+                    
+                    // 添加透明效果
+                    buttons.forEach(btn => btn.classList.add('transparent-button'));
                 } else {
                     location.reload();
                 }
             });
         }
 
-        // 旋转功能
         function rotateClockwise() {
             animateRotation(cuboid.rotation.z, cuboid.rotation.z - Math.PI/2);
         }
@@ -193,7 +197,6 @@
             requestAnimationFrame(update);
         }
 
-        // 事件处理系统
         function setupEventListeners() {
             const canvas = renderer.domElement;
             
@@ -236,7 +239,6 @@
             });
         }
 
-        // 坐标转换核心方法（关键修复）
         function getIntersection(event) {
             const rect = renderer.domElement.getBoundingClientRect();
             const clientX = event.touches?.[0]?.clientX || event.clientX;
@@ -249,14 +251,12 @@
             const intersects = raycaster.intersectObject(cuboid);
             
             if(intersects[0]) {
-                // 关键修复：使用逆矩阵转换坐标
                 const matrix = new THREE.Matrix4().getInverse(cuboid.matrixWorld);
                 return intersects[0].point.applyMatrix4(matrix);
             }
             return null;
         }
 
-        // 绘制功能
         function startDrawing(event) {
             const point = getIntersection(event);
             if(point) {
@@ -281,7 +281,6 @@
             }
         }
 
-        // 预设动画绘制系统
         function createAnimatedLine(start, end, duration=1000) {
             return new Promise(resolve => {
                 const geometry = new THREE.BufferGeometry();
@@ -311,7 +310,6 @@
             });
         }
 
-        // 预设绘图指令
         const drawFunctions = {
             drawLine13: () => createAnimatedLine(
                 new THREE.Vector3(-10, -15, 5),
@@ -343,7 +341,6 @@
             }
         };
 
-        // 按钮状态管理
         let currentStep = 0;
         const buttons = [
             document.getElementById('btn13'),
@@ -366,21 +363,18 @@
             window[name] = () => executeStep(fn);
         });
 
-        // 动画循环
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
             renderer.render(scene, camera);
         }
 
-        // 响应式布局
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // 初始化执行
         initScene();
         setupModeToggle();
         setupEventListeners();
